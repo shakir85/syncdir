@@ -53,6 +53,9 @@ if __name__ == '__main__':
                             
     parser.add_argument('--dest', required=True, help='Path to backup destination directory - no trailing forward-slash')
     parser.add_argument('--src', required=True, help='Path to backup source directory - no trailing forward-slash')
+    parser.add_argument('--compress', required=False, help='Compress backup directory '
+                                                           '(This will force rsync to always copy all the files'
+                                                           'rather than copying deltas only).')
 
     args = parser.parse_args()
 
@@ -60,5 +63,6 @@ if __name__ == '__main__':
     logging.info("Backup completed.")
     # Arbitrary sleep
     time.sleep(8)
-    compress()
-    logging.info("Backup compressed.")
+    if args.compress:
+        compress()
+        logging.info("Backup compressed.")
