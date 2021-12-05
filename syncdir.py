@@ -56,13 +56,22 @@ if __name__ == '__main__':
     parser.add_argument('--compress', required=False, help='Compress backup directory '
                                                            '(This will force rsync to always copy all the files'
                                                            'rather than copying deltas only).')
+    parser.add_argument('--job-name', required=False,
+                        help="Sync job name to be printed in the log file. Good if running this script for multiple"
+                             "backup tasks of various source/destination files.")
 
     args = parser.parse_args()
 
     backup()
-    logging.info("Backup completed.")
+    if args.job_name:
+        logging.info("Backup completed.")
+    else:
+        logging.info(f"{args.job_name}, Backup completed")
     # Arbitrary sleep
     time.sleep(8)
     if args.compress:
         compress()
-        logging.info("Backup compressed.")
+        if args.job_name:
+            logging.info("Backup completed.")
+        else:
+            logging.info(f"{args.job_name}, Backup completed")
