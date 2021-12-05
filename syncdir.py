@@ -64,14 +64,14 @@ if __name__ == '__main__':
 
     backup()
     if args.job_name:
-        logging.info("Backup completed.")
-    else:
         logging.info(f"{args.job_name}, Backup completed")
+    else:
+        logging.info("Backup completed.")
     # Arbitrary sleep
     time.sleep(8)
     if args.compress:
         compress()
         if args.job_name:
-            logging.info("Backup completed.")
-        else:
             logging.info(f"{args.job_name}, Backup completed")
+        else:
+            logging.info("Backup completed.")
