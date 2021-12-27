@@ -1,5 +1,6 @@
 #!/bin/python3
 import time
+import os
 import logging
 from argparse import ArgumentParser
 from datetime import datetime
@@ -9,11 +10,12 @@ from toolbox import send_to_discord
     Script to rsync everything in a directory
 """
 
+# TODO: Add 3,2,1 strategy copy & compress function
 
 def backup():
     try:
-        # Run in a targeted user's cron
-        # rsync will copy the content of "/home/$USER" but not the $USER directory itself
+        # Run in user's cron
+        # rsync will copy the 'content' of the directory but not the directory itself
         rsync = f"rsync -Ccavz --delete {args.src} {args.dest}"
         process = Popen(rsync, shell=True, stdout=PIPE, stderr=STDOUT)
 
@@ -21,8 +23,19 @@ def backup():
             for i in iter(process.stdout.readline, b''):
                 logging.info(i.decode("utf-8").strip())
 
+        # Logging & Notification
+        if args.job_name:
+            logging.info(f"{args.job_name}, Backup completed")
+        else:
+            logging.info("Backup completed.")
+
+        if args.url and args.job_name:
+            send_to_discord.success_job(webhook_url=os.getenv("DISCORD_WEBHOOK"), job_name=args.job_name)
+
     except OSError as e:
         logging.error(f"backup() - Failed to run rsync\n{e}")
+        if args.url and args.job_name:
+            send_to_discord.failed_job(webhook_url=os.getenv("DISCORD_WEBHOOK"), job_name=args.job_name)
 
 
 def compress():
@@ -37,8 +50,19 @@ def compress():
             for i in iter(process.stdout.readline, b''):
                 logging.info(i.decode("utf-8").strip())
 
+        # Logging & Notification
+        if args.job_name:
+            logging.info(f"{args.job_name}, compress completed.")
+        else:
+            logging.info("Compress task completed.")
+
+        if args.url and args.job_name:
+            send_to_discord.success_job(webhook_url=os.getenv("DISCORD_WEBHOOK"), job_name=args.job_name)
+
     except OSError as e:
         logging.error(f"compress() - Failed to compress backup\n{e}")
+        if args.url and args.job_name:
+            send_to_discord.failed_job(webhook_url=os.getenv("DISCORD_WEBHOOK"), job_name=args.job_name)
 
 
 if __name__ == '__main__':
@@ -59,21 +83,12 @@ if __name__ == '__main__':
     parser.add_argument('--job-name', required=False,
                         help="Sync job name to be printed in the log file. Good if running this script for multiple"
                              "backup tasks of various source/destination files.")
-    parser.add_argument("--url", required=True, help="Discord channel webhook url")
-
     args = parser.parse_args()
 
+    # Execute
     backup()
 
-    if args.job_name:
-        logging.info(f"{args.job_name}, Backup completed")
-    else:
-        logging.info("Backup completed.")
-    # Arbitrary sleep
+    # Arbitrary sleep to ensure backup & compress execution don't overlap
     time.sleep(8)
     if args.compress:
         compress()
-        if args.job_name:
-            logging.info(f"{args.job_name}, Backup completed")
-        else:
-            logging.info("Backup completed.")
