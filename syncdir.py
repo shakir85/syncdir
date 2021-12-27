@@ -4,6 +4,7 @@ import logging
 from argparse import ArgumentParser
 from datetime import datetime
 from subprocess import Popen, PIPE, STDOUT
+from toolbox import send_to_discord
 """
     Script to rsync everything in a directory
 """
@@ -50,7 +51,6 @@ if __name__ == '__main__':
                             Designed to run in a cron job. 
                             You need to create a log directory in /var/log/syncdir 
                             and you need to give the executing user permission to write to this directory.''')
-                            
     parser.add_argument('--dest', required=True, help='Path to backup destination directory - no trailing forward-slash')
     parser.add_argument('--src', required=True, help='Path to backup source directory - no trailing forward-slash')
     parser.add_argument('--compress', required=False, help='Compress backup directory '
@@ -59,10 +59,12 @@ if __name__ == '__main__':
     parser.add_argument('--job-name', required=False,
                         help="Sync job name to be printed in the log file. Good if running this script for multiple"
                              "backup tasks of various source/destination files.")
+    parser.add_argument("--url", required=True, help="Discord channel webhook url")
 
     args = parser.parse_args()
 
     backup()
+
     if args.job_name:
         logging.info("Backup completed.")
     else:
