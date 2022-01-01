@@ -19,7 +19,7 @@ if __name__ == '__main__':
                                                            'rather than synchronizing the deltas only.')
     parser.add_argument('-n', '--job-name', required=True,
                         help="Sync job name. It's required not for functional reasons, just for logging purposes..")
-    parser.add_argument('--dry-run', required=False, help='Dry run sync task')
+    parser.add_argument('--dry-run', required=False, help='Dry run sync task', action='store_true')
     args = parser.parse_args()
 
     """---- Execution Block ----"""
