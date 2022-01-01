@@ -29,6 +29,7 @@ def backup(destination, source, job_name, dry_run=False):
 
         if dry_run:
             process = Popen(rsync_dry_run, shell=True, stdout=PIPE, stderr=STDOUT)
+            logging.info("Running rsync in Dry-Run mode...")
         else:
             process = Popen(rsync, shell=True, stdout=PIPE, stderr=STDOUT)
 
