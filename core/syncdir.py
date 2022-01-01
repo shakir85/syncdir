@@ -25,7 +25,7 @@ def backup(destination, source, job_name, dry_run=False):
     try:
         # rsync will copy the 'content' of the directory but not the directory itself
         rsync = f"rsync -Ccavz --delete {source} {destination}"
-        rsync_dry_run = f"rsync -Ccavz ---dry-run -delete {source} {destination}"
+        rsync_dry_run = f"rsync -Ccavz --dry-run -delete {source} {destination}"
 
         if dry_run:
             process = Popen(rsync_dry_run, shell=True, stdout=PIPE, stderr=STDOUT)
