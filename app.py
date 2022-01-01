@@ -12,7 +12,7 @@ if __name__ == '__main__':
                             and you need to give the executing user permissions to write to this directory.''')
     parser.add_argument('-d', '--dest', required=True, help='Absolute path to backup directory - no trailing forward-slash')
     parser.add_argument('-s', '--src', required=True, help='Absolute path to source directory - no trailing forward-slash')
-    parser.add_argument('c', '--compress', required=False, help='To compress backup directory. If you intended to run'
+    parser.add_argument('-c', '--compress', required=False, help='To compress backup directory. If you intended to run'
                                                            'the script as a scheduled task (i.e. cron), '
                                                            'then this option will force rsync to '
                                                            'always perform files sync across all the files'
