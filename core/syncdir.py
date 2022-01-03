@@ -13,7 +13,7 @@ from utils import send_to_discord
 # TODO: Add 3,2,1 strategy copy & compress function
 DISCORD_WEBHOOK = os.getenv("DISCORD_WEBHOOK")
 
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s',
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s',
                         filename="/var/log/syncdir/syncdir.log", filemode="a")
 
 
