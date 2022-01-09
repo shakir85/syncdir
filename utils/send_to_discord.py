@@ -15,12 +15,13 @@ logging.basicConfig(level=logging.DEBUG,
 
 
 def success_job(webhook_url, job_name):
+    """Sends success message to Discord, message border colored Green"""
     now = datetime.datetime.now()
     webhook = Webhook.from_url(webhook_url, adapter=RequestsWebhookAdapter())
     embed = Embed(timestamp=now.now(), tilte="rsync backup", description="[OK] complete", color=0x2ecc71)
     try:
-        msg = webhook.send(embed=embed, content=f"Files have been backed up successfully for job {job_name}")
-        logging.info("Success message was sent to Discord channel")
+        msg = webhook.send(embed=embed, content=f"Backup success for [{job_name}]")
+        logging.info("Success message sent to Discord channel")
         return msg
     except HTTPException as h:
         logging.error(f"Sending message to discord failed\n{h}")
@@ -31,12 +32,13 @@ def success_job(webhook_url, job_name):
 
 
 def failed_job(webhook_url, job_name):
+    """Sends failure message to Discord, similar to success_job() but Discord message border colored Red"""
     now = datetime.datetime.now()
     webhook = Webhook.from_url(webhook_url, adapter=RequestsWebhookAdapter())
     embed = Embed(timestamp=now.now(), tilte="rsync backup", description="[Alert] failed", color=0xe74c3c)
     try:
-        msg = webhook.send(embed=embed, content=f"Rsync backup failed for job {job_name}")
-        logging.info("Success message was sent to Discord channel")
+        msg = webhook.send(embed=embed, content=f"Rsync backup failed, job [{job_name}]")
+        logging.info("Success message sent to Discord channel")
         return msg
     except HTTPException as h:
         logging.error(f"Sending message to discord failed\n{h}")
