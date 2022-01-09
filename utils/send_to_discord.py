@@ -20,9 +20,9 @@ def success_job(webhook_url, job_name):
     webhook = Webhook.from_url(webhook_url, adapter=RequestsWebhookAdapter())
     embed = Embed(timestamp=now.now(), tilte="rsync backup", description="[OK] complete", color=0x2ecc71)
     try:
-        msg = webhook.send(embed=embed, content=f"Backup success for [{job_name}]")
+        webhook.send(embed=embed, content=f"Backup success for [{job_name}]")
         logging.info("Success message sent to Discord channel")
-        return msg
+
     except HTTPException as h:
         logging.error(f"Sending message to discord failed\n{h}")
     except NotFound as nf:
@@ -37,9 +37,9 @@ def failed_job(webhook_url, job_name):
     webhook = Webhook.from_url(webhook_url, adapter=RequestsWebhookAdapter())
     embed = Embed(timestamp=now.now(), tilte="rsync backup", description="[Alert] failed", color=0xe74c3c)
     try:
-        msg = webhook.send(embed=embed, content=f"Rsync backup failed, job [{job_name}]")
+        webhook.send(embed=embed, content=f"Rsync backup failed, job [{job_name}]")
         logging.info("Success message sent to Discord channel")
-        return msg
+
     except HTTPException as h:
         logging.error(f"Sending message to discord failed\n{h}")
     except NotFound as nf:
